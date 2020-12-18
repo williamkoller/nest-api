@@ -10,7 +10,7 @@ import { UserModule } from './user/user.module'
   imports: [
     TypeOrmModule.forRoot(),
     GraphQLModule.forRoot({
-      autoSchemaFile: join(process.cwd(), 'src/schema.gqp'),
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
     UserModule,
   ],
