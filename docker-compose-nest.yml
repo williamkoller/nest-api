@@ -9,14 +9,14 @@ services:
     ports: 
       - ${PORT}:${PORT}
     volumes: 
-      - .:/home/api  
-      - /home/api/node_modules
+      - .:/usr/src/app  
+      - /usr/src/app/node_modules
     environment: 
         DB_HOST: database
         DB_PORT: 5432
 
   database:
-    image: postgres:13
+    image: postgres:13.1-alpine
     container_name: db_nest
     restart: always
     env_file: 
