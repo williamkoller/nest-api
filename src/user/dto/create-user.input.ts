@@ -10,4 +10,8 @@ export class CreateUserInput {
   @IsEmail()
   @IsNotEmpty({ message: 'This field cannot be empty' })
   email: string
+
+  @IsString()
+  @IsNotEmpty({ message: 'This field cannot be empty' })
+  password: string
 }
