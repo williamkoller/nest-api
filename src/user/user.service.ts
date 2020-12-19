@@ -10,8 +10,7 @@ export class UserService {
   constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
 
   async findAllUsers(): Promise<User[]> {
-    const users = await this.userRepository.find()
-    return users
+    return await this.userRepository.find()
   }
 
   async findUserById(id: string): Promise<User> {
@@ -41,21 +40,16 @@ export class UserService {
     return userSaved
   }
 
-  async updateUser(id: string, data: UpdateUserInput): Promise<User> {
-    const user = await this.findUserById(id)
-    await this.userRepository.update(user, { ...data })
-    const userUpdated = this.userRepository.create({ ...user, ...data })
-    return userUpdated
+  async updateUser(data: UpdateUserInput): Promise<User> {
+    const user = await this.findUserById(data.id)
+    return this.userRepository.save({ ...user, ...data })
   }
 
-  async deleteUser(id: string): Promise<boolean> {
+  async deleteUser(id: string): Promise<void> {
     const user = await this.findUserById(id)
-    const deleted = await this.userRepository.delete(user)
-
-    if (deleted) {
-      return true
-    } else {
-      return false
+    const userDeleted = await this.userRepository.delete(user)
+    if (!userDeleted) {
+      throw new InternalServerErrorException()
     }
   }
 }

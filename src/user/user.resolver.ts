@@ -34,11 +34,11 @@ export class UserResolver {
 
   @Mutation(() => User)
   async updateUser(@Args('id') id: string, @Args('data') data: UpdateUserInput): Promise<User> {
-    return await this.userService.updateUser(id, data)
+    return await this.userService.updateUser({ id, ...data })
   }
 
   @Mutation(() => Boolean)
-  async deleteUser(@Args('id') id: string): Promise<boolean> {
-    return await this.userService.deleteUser(id)
+  async deleteUser(@Args('id') id: string): Promise<void> {
+    await this.userService.deleteUser(id)
   }
 }
