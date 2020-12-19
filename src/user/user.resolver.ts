@@ -10,31 +10,31 @@ export class UserResolver {
 
   @Query(() => [User])
   async users(): Promise<User[]> {
-    const users = await this.userService.findAllUsers()
-    return users
+    return await this.userService.findAllUsers()
   }
 
   @Query(() => User)
   async userId(@Args('id') id: string): Promise<User> {
-    const userId = await this.userService.findUserById(id)
-    return userId
+    return await this.userService.findUserById(id)
+  }
+
+  @Query(() => User)
+  async findUserByEmail(@Args('email') email: string): Promise<User> {
+    return await this.userService.findUserByEmail(email)
   }
 
   @Mutation(() => User)
   async createUser(@Args('data') data: CreateUserInput): Promise<User> {
-    const user = await this.userService.createUser(data)
-    return user
+    return await this.userService.createUser(data)
   }
 
   @Mutation(() => User)
   async updateUser(@Args('id') id: string, @Args('data') data: UpdateUserInput): Promise<User> {
-    const user = await this.userService.updateUser(id, data)
-    return user
+    return await this.userService.updateUser(id, data)
   }
 
   @Mutation(() => Boolean)
   async deleteUser(@Args('id') id: string): Promise<boolean> {
-    const user = await this.userService.deleteUser(id)
-    return user
+    return await this.userService.deleteUser(id)
   }
 }
