@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { CreateUserInput } from './dto/create-user.input'
@@ -32,6 +32,10 @@ export class UserService {
   }
 
   async createUser(data: CreateUserInput): Promise<User> {
+    const findUser = await this.findUserByEmail(data.email)
+    if (findUser) {
+      throw new BadRequestException('User already registered with this email')
+    }
     const user = this.userRepository.create(data)
     const userSaved = await this.userRepository.save(user)
     if (!userSaved) {
@@ -45,11 +49,9 @@ export class UserService {
     return this.userRepository.save({ ...user, ...data })
   }
 
-  async deleteUser(id: string): Promise<void> {
+  async deleteUser(id: string): Promise<boolean> {
     const user = await this.findUserById(id)
-    const userDeleted = await this.userRepository.delete(user)
-    if (!userDeleted) {
-      throw new InternalServerErrorException()
-    }
+    const userDeleted = await this.userRepository.remove(user)
+    return userDeleted ? true : false
   }
 }
