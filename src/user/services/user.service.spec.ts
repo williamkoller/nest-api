@@ -73,4 +73,16 @@ describe('UserService', () => {
       expect(service.findUserById('3')).rejects.toThrow(new NotFoundException('User not found.'));
     });
   });
+
+  describe('createUser()', () => {
+    it('should create a user', async () => {
+      const user = TestUtil.giveAMeAValidUser();
+      mockRepository.create.mockReturnValue(user);
+      mockRepository.save.mockReturnValue(user);
+      const userSaved = await service.createUser(user);
+      expect(userSaved).toMatchObject(user);
+      expect(mockRepository.create).toBeCalledTimes(1);
+      expect(mockRepository.save).toBeCalledTimes(1);
+    });
+  });
 });
