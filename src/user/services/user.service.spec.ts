@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import TestUtil from '../../common/test/TestUnitl';
@@ -81,6 +81,20 @@ describe('UserService', () => {
       mockRepository.save.mockReturnValue(user);
       const userSaved = await service.createUser(user);
       expect(userSaved).toMatchObject(user);
+      expect(mockRepository.create).toBeCalledTimes(1);
+      expect(mockRepository.save).toBeCalledTimes(1);
+    });
+
+    it('should return a exception when does not create a user', async () => {
+      const user = TestUtil.giveAMeAValidUser();
+      mockRepository.create.mockReturnValue(user);
+      mockRepository.save.mockReturnValue(null);
+      await service.createUser(user).catch((e) => {
+        expect(e).toBeInstanceOf(InternalServerErrorException);
+        expect(e).toMatchObject({
+          message: 'Error creating a user',
+        });
+      });
       expect(mockRepository.create).toBeCalledTimes(1);
       expect(mockRepository.save).toBeCalledTimes(1);
     });
