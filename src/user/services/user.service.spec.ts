@@ -124,4 +124,30 @@ describe('UserService', () => {
       expect(mockRepository.update).toBeCalledTimes(1);
     });
   });
+
+  describe('deleteUser()', () => {
+    it('should delete a existing user', async () => {
+      const user = TestUtil.giveAMeAValidUser();
+      mockRepository.delete.mockReturnValue(user);
+      mockRepository.findOne.mockReturnValue(user);
+
+      const deletedUser = await service.deleteUser('1');
+
+      expect(deletedUser).toBe(true);
+      expect(mockRepository.findOne).toBeCalledTimes(1);
+      expect(mockRepository.delete).toBeCalledTimes(1);
+    });
+
+    it('should not delete a existing user', async () => {
+      const user = TestUtil.giveAMeAValidUser();
+      mockRepository.delete.mockReturnValue(null);
+      mockRepository.findOne.mockReturnValue(user);
+
+      const deletedUser = await service.deleteUser('8');
+
+      expect(deletedUser).toBe(false);
+      expect(mockRepository.findOne).toBeCalledTimes(1);
+      expect(mockRepository.delete).toBeCalledTimes(1);
+    });
+  });
 });
